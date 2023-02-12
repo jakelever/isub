@@ -38,7 +38,7 @@ spec:
         # the container will run the secondjob.py script from your external filespace 
         command:
           - "bash"
-          - "/home/jakelever/jakelevervol1claim/jobcontrol/run.sh"
+          - "/home/jakelever/jakelevervol1claim/jbatch/run.sh"
           - "JOB_ID"
           - "PWD"
           - "SCRIPT"
