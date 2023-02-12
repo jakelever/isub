@@ -14,10 +14,13 @@ if [[ "$PERMISSIONS" != "777" ]]; then
 	exit 1
 fi
 
-JOB_ID=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 32 | head -n 1)
+JOB_DATE=$(date +"%Y-%m-%d-%H-%M-%S")
+RAND_ID=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 4 | head -n 1)
+JOB_ID="$JOB_DATE-$RAND_ID"
 
-JOB_NAME=$(basename "$SCRIPT" | tr -dc 'a-zA-Z0-9' | tr '[:upper:]' '[:lower:]' | cut -f 1 -d ' ')
-JOB_NAME="$JOB_NAME-$JOB_ID"
+SCRIPT_NAME=$(basename "$SCRIPT" | tr -dc 'a-zA-Z0-9' | tr '[:upper:]' '[:lower:]' | cut -f 1 -d ' ')
+
+JOB_NAME="$SCRIPT_NAME-$JOB_ID"
 
 echo "$JOB_NAME"
 
