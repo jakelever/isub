@@ -1,2 +1,1 @@
-# jbatch
-Batch scheduler ideas for OpenShift cluster
+# jbatch: Batch scheduler for OpenShift cluster
