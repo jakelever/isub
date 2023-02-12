@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -eux
 
 SCRIPT=$1
 
@@ -22,7 +22,7 @@ SCRIPT_NAME=$(basename "$SCRIPT" | tr -dc 'a-zA-Z0-9' | tr '[:upper:]' '[:lower:
 
 JOB_NAME="$SCRIPT_NAME-$JOB_ID"
 
-echo "$JOB_NAME"
+echo "Created job: $JOB_NAME"
 
 BASE=/home/jakelever/jakelevervol1claim/jbatch
 JOB_DIR=$BASE/jobs/$JOB_ID
@@ -36,7 +36,7 @@ perl -pi -e "s|JOB_ID|$JOB_ID|g" $JOB_DIR/job.yml
 perl -pi -e "s|PWD|$PWD|g" $JOB_DIR/job.yml
 perl -pi -e "s|SCRIPT|$SCRIPT|g" $JOB_DIR/job.yml
 
-echo $JOB_DIR/job.yml
+echo "Job YML file: $JOB_DIR/job.yml"
 
 oc create -f $JOB_DIR/job.yml
 
