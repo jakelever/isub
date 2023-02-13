@@ -56,11 +56,11 @@ spec:
             cpu: "2000m" 
             # memory units are also defined by a suffix. typically this will
             # be "Mi" or "Gi" as appropriate
-            memory: "2Gi"
+            memory: "8Gi"
             # GPUs are slightly different as they're not natively supported
             # by Kubernetes. This indicates that the container requires 1 
             # GPU in order to run
-            nvidia.com/gpu: 1 
+            nvidia.com/gpu: 1
           # the limits section is identical to the requests section in its
           # structure, but rather than defining the minimum required resources 
           # for the container, it defines thresholds which if exceeded may lead
@@ -71,9 +71,9 @@ spec:
           # one GPU, the cluster will only allocate a single GPU to your container, 
           # and the others will not be visible to code inside it
           limits:
-            cpu: "4000m" 
+            cpu: "2000m" 
             memory: "8Gi"
-            nvidia.com/gpu: 1 
+            nvidia.com/gpu: 1
         # this says "mount the external volume 'nfs-access' at the location /nfs
         # inside this container"
         volumeMounts:
@@ -103,8 +103,8 @@ spec:
       #  "node-role.ida/gpua6000" (RTX A6000)
       nodeSelector:
         #node-role.ida/gpu2080ti: "true"
-        #node-role.ida/gpu3090: "true"
-        node-role.ida/gpua6000: "true"
+        node-role.ida/gpu3090: "true"
+        #node-role.ida/gpua6000: "true"
       # determines what Kubernetes will do if the container inside the 
       # pod fails to start or crashes. This just tells it to give up
       # without retrying.
