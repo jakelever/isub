@@ -1,1 +1,1 @@
-# jbatch: Batch scheduler for OpenShift cluster
+# isub: Batch scheduler for IDA OpenShift cluster
