@@ -24,7 +24,7 @@ JOB_NAME="$SCRIPT_NAME-$JOB_ID"
 
 echo "Created job: $JOB_NAME"
 
-BASE=/home/jakelever/jakelevervol1claim/jbatch
+BASE=/home/jakelever/jakelevervol1claim/isub
 JOB_DIR=$BASE/jobs/$JOB_ID
 
 mkdir -p $JOB_DIR

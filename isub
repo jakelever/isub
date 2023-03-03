@@ -9,8 +9,8 @@ import tempfile
 import time
 from subprocess import run
 
-jbatch_dir = '/home/jakelever/jakelevervol1claim/jbatch'
-template_filename = f'{jbatch_dir}/template.yml'
+base_dir = '/home/jakelever/jakelevervol1claim/isub'
+template_filename = f'{base_dir}/template.yml'
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -24,13 +24,13 @@ def main():
 	args = parser.parse_args()
 
 	if args.command:
-		run_script = f'{jbatch_dir}/run_command.sh'
+		run_script = f'{base_dir}/run_command.sh'
 		run_args = ' '.join(args.script)
 	else:
 		assert len(args.script) == 1, "Expected a single script file"
 		assert os.path.isfile(args.script[0])
 
-		run_script = f'{jbatch_dir}/run_script.sh'
+		run_script = f'{base_dir}/run_script.sh'
 		run_args = args.script[0]
 
 
