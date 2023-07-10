@@ -24,6 +24,11 @@ def main():
 	parser.add_argument('--mem',required=False,type=int,default=8,help='How much memory to request (in GiB)')
 	parser.add_argument('--gpu',required=False,type=str,default='3090',help=f'Which GPU to request (options are {", ".join(gpu_options)}.')
 	args = parser.parse_args()
+
+	username = os.environ['USER']
+
+	volume_directory = f'/home/{username}/{username}vol1claim'
+	assert os.path.isdir(volume_directory), f"Could not find expected directory: {volume_directory}. Unable to launch job"
 	
 	base_dir = os.path.dirname(inspect.getfile(isub))
 	template_filename = f'{base_dir}/template.yml'
@@ -41,7 +46,7 @@ def main():
 		run_args = args.script[0]
 
 
-	assert args.gpu in 
+	assert args.gpu in gpu_options
 
 	cpu_text = f"{args.cpu}000m"
 	mem_text = f"{args.mem}Gi"
@@ -76,6 +81,7 @@ def main():
 	with open(template_filename) as f:
 		template = f.read()
 
+	template = template.replace('<USERNAME>',username)
 	template = template.replace('<JOB_NAME>',job_name)
 	template = template.replace('<JOB_ID>',job_id)
 	template = template.replace('<WORKING_DIR>',pwd)
