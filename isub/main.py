@@ -18,7 +18,7 @@ def main():
 									formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument('script',nargs='+',type=str,help='Script to run')
 	parser.add_argument('--command',action='store_true',help='Run the arguments as a command and not a script')
-	parser.add_argument('--print',action='store_true',help='Print out the job file to stdout (useful for debug)')
+	parser.add_argument('--printonly',action='store_true',help='Print out the job file to stdout (useful for debug) and do not submit')
 	parser.add_argument('--name',required=False,type=str,help='Name to give the job')
 	parser.add_argument('--cpu',required=False,type=int,default=2,help='How many CPUs to request')
 	parser.add_argument('--mem',required=False,type=int,default=8,help='How much memory to request (in GiB)')
@@ -92,8 +92,9 @@ def main():
 	template = template.replace('<GPU_COUNT>',gpu_count)
 	template = template.replace('<GPU_TYPE>',gpu_type)
 
-	if args.print:
+	if args.printonly:
 		print(template)
+		return
 
 	with tempfile.NamedTemporaryFile() as tf:
 		with open(tf.name,'w') as f:
