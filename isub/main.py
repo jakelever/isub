@@ -12,18 +12,23 @@ import inspect
 import isub
 
 def main():
+	default_image = 'jakelever/ml_gpu:latest'
 	gpu_options = ['none','titan','2080ti','a6000','3090']
 
 	parser = argparse.ArgumentParser("Tool for running jobs on OpenShift cluster",
 									formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-	parser.add_argument('script',nargs='+',type=str,help='Script to run')
-	parser.add_argument('--command',action='store_true',help='Run the arguments as a command and not a script')
+	parser.add_argument('--script',required=False,type=str,help='Bash script to run')
+	parser.add_argument('--command',required=False,type=str,help='Command to run')
 	parser.add_argument('--printonly',action='store_true',help='Print out the job file to stdout (useful for debug) and do not submit')
 	parser.add_argument('--name',required=False,type=str,help='Name to give the job')
+	parser.add_argument('--logfile',required=False,type=str,help='Output name of log file (where stdout/stderr will be piped). If not provided, one will be creating using the job id')
+	parser.add_argument('--image',required=False,type=str,default=default_image,help='Docker image to use')
 	parser.add_argument('--cpu',required=False,type=int,default=2,help='How many CPUs to request')
 	parser.add_argument('--mem',required=False,type=int,default=8,help='How much memory to request (in GiB)')
 	parser.add_argument('--gpu',required=False,type=str,default='3090',help=f'Which GPU to request (options are {", ".join(gpu_options)}.')
 	args = parser.parse_args()
+
+	assert args.script or args.command, "Must provide --script with a Bash script or --command with a shell command"
 
 	username = os.environ['USER']
 
@@ -38,13 +43,12 @@ def main():
 
 	if args.command:
 		run_script = f'{base_dir}/run_command.sh'
-		run_args = ' '.join(args.script)
-	else:
-		assert len(args.script) == 1, "Expected a single script file"
-		assert os.path.isfile(args.script[0])
+		run_args = args.command
+	elif args.script:
+		assert os.path.isfile(args.script)
 
 		run_script = f'{base_dir}/run_script.sh'
-		run_args = args.script[0]
+		run_args = args.script
 
 
 	assert args.gpu in gpu_options
@@ -72,12 +76,20 @@ def main():
 
 	if args.name:
 		job_name = f"{args.name}-{job_id}"
-	else:
+	elif args.script:
 		job_name = f"{args.script[0]}-{job_id}"
+	else:
+		first_part_of_command = args.command.strip().split()[0]
+		job_name = f"{first_part_of_command}-{job_id}"
 
 	allowed_chars = string.ascii_letters + string.digits + '-'
 	job_name = job_name.lower().replace('/','-')
 	job_name = "".join( c for c in job_name if c in allowed_chars )
+
+	if args.logfile:
+		logfile = args.logfile
+	else:
+		logfile = f"log.{job_id}.out"
 
 	with open(template_filename) as f:
 		template = f.read()
@@ -88,6 +100,7 @@ def main():
 	template = template.replace('<WORKING_DIR>',pwd)
 	template = template.replace('<RUN_SCRIPT>',run_script)
 	template = template.replace('<RUN_ARGS>',run_args)
+	template = template.replace('<LOGFILE>',logfile)
 	template = template.replace('<CPU>',cpu_text)
 	template = template.replace('<MEMORY>',mem_text)
 	template = template.replace('<GPU_COUNT>',gpu_count)

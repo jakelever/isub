@@ -43,6 +43,7 @@ spec:
           - "<JOB_ID>"
           - "<WORKING_DIR>"
           - "<RUN_ARGS>"
+          - "<LOGFILE>"
         resources:
           # these are the hardware resources the container needs 
           # as a minimum in order to run. the pod won't be scheduled
