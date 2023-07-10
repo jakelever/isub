@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION='0.0.2'
+VERSION='0.0.3'
 
 setup(name='isub',
 	version=VERSION,
@@ -13,6 +13,7 @@ setup(name='isub',
 	license='MIT',
 	packages=['isub'],
 	install_requires=[],
+        package_data={'': ['isub/run_script.sh','isub/run_command.sh','isub/template.yml']},
 	include_package_data=True,
 	entry_points = {
 		'console_scripts': ['isub=isub.main:main'],
