@@ -112,7 +112,7 @@ def main():
 	if args.name:
 		job_name = f"{args.name}-{job_id}"
 	elif args.script:
-		job_name = f"{args.script[0]}-{job_id}"
+		job_name = f"{args.script}-{job_id}"
 	else:
 		first_part_of_command = args.command.strip().split()[0]
 		job_name = f"{first_part_of_command}-{job_id}"
