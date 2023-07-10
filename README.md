@@ -1,6 +1,6 @@
 # isub: Job submitter for IDA OpenShift cluster
 
-This is a basic system for submitting jobs to the IDA OpenShift GPU cluster.
+This is a basic system for submitting jobs to the IDA OpenShift GPU cluster. It sets up a job on the cluster using a Docker image and connects to the file system so that your files are accessible.
 
 ## Installation
 
@@ -10,9 +10,14 @@ Install using pip3 directly from this GitHub repo
 pip3 install -U --user git+https://github.com/jakelever/isub.git
 ```
 
+## Important details
+
+- You can only run code inside your volume directory (something like /home/jakelever/jakelevervol1claim).
+- The directories which you write to must be write accessible to all. Use `chmod a+w <DIRECTORY>` with the directory you want to make write accessible to all
+
 ## Example Usage
 
-Let's show an example of running some HuggingFace Python code. Create a file called `example.py` with the five lines of Python below.
+Let's show an example of running some HuggingFace Python code. Create a file called `example.py` with the five lines of Python below. And note the important details above about where you run it and write permissions.
 
 ```python
 from transformers import pipeline, set_seed
