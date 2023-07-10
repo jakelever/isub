@@ -12,3 +12,6 @@ RUN python3 -m pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchau
 
 RUN python3 -m pip install transformers tokenizers accelerate datasets bitsandbytes sacremoses
 RUN python3 -m pip install ray
+
+RUN python3 -m pip install networkx scispacy https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_sm-0.5.1.tar.gz
+
