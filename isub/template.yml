@@ -17,14 +17,14 @@ spec:
   backoffLimit: 0
   template:        
     metadata:
-      name: jctrl
+      name: isub
     spec:
       # in the "containers:" section you define the container(s) that
       # will run inside the Pod itself. Usually you'll just need one. 
       containers:
         # set a name for the container, which will be visible in the
         # CLI/web interface
-      - name: jctrl-container  
+      - name: isub-container  
         # specify the image this container will be created from. 
         # in this example, we'll use the official NVIDIA Tensorflow images
         # from DockerHub (https://hub.docker.com/r/tensorflow/tensorflow)
