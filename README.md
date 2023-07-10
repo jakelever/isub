@@ -27,7 +27,7 @@ generated = generator("Hello, I'm a language model,", max_length=30, num_return_
 print(generated)
 ```
 
-You can then run it on the cluster with the `isub` command below. It should create a job that will be visible through the cluster console (link on the cluster Moodle page) and save the output to a log file.
+You can then run it on the cluster with the `isub` command below. It should create a job that will be visible through the cluster console (link on the cluster Moodle page) and save the output to a log file in the same directory.
 
 ```
 isub --command "python3 example.py"
