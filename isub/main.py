@@ -31,6 +31,7 @@ def main():
 	assert os.path.isdir(volume_directory), f"Could not find expected directory: {volume_directory}. Unable to launch job"
 	
 	base_dir = os.path.dirname(inspect.getfile(isub))
+	base_dir = base_dir.replace(os.path.realpath(volume_directory), volume_directory)
 	template_filename = f'{base_dir}/template.yml'
 	
 	assert os.path.isfile(template_filename), "Unable to find the template file"
