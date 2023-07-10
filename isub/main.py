@@ -11,6 +11,7 @@ from subprocess import run
 import inspect
 import stat
 import isub
+from distutils.file_util import copy_file
 
 def assertWritePermissions(directory):
 	assert os.path.isdir(directory), f"{directory} is not a directory"
@@ -23,6 +24,15 @@ def assertWritePermissions(directory):
 	assert owner_write_permission, write_permission_warning
 	assert group_write_permission, write_permission_warning
 	assert others_write_permission, write_permission_warning
+
+def putScriptsOnVolume(base_dir, volume_script_dir):
+	if not os.path.isdir(volume_script_dir):
+		os.mkdir(volume_script_dir)
+
+	files_to_copy = ['run_command.sh','run_script.sh']
+	for filename in files_to_copy:
+		assert os.path.isfile(os.path.join(base_dir, filename)), f"Couldn't find file ({filename}) in base_dir ({base_dir})"
+		copy_file(os.path.join(base_dir, filename), os.path.join(volume_script_dir, filename), update=1)
 
 def main():
 	default_image = 'jakelever/ml_gpu:latest'
@@ -50,6 +60,8 @@ def main():
 
 	volume_directory = f'/home/{username}/{username}vol1claim'
 	assert os.path.isdir(volume_directory), f"Could not find expected directory: {volume_directory}. Unable to launch job"
+	volume_script_dir = f'{volume_directory}/.isub'
+
 
 	assert volume_directory in current_working_directory or os.path.realpath(volume_directory) in current_working_directory, f"isub must be run in directory or subdirectory of your volume: {volume_directory}"
 	current_working_directory = current_working_directory.replace(os.path.realpath(volume_directory), volume_directory)
@@ -67,15 +79,16 @@ def main():
 		print(f"base_dir={base_dir}")
 		print(f"template_filename={template_filename}")
 	
+	putScriptsOnVolume(base_dir,volume_script_dir)
 	assert os.path.isfile(template_filename), "Unable to find the template file"
 
 	if args.command:
-		run_script = f'{base_dir}/run_command.sh'
+		run_script = f'{volume_script_dir}/run_command.sh'
 		run_args = args.command
 	elif args.script:
 		assert os.path.isfile(args.script)
 
-		run_script = f'{base_dir}/run_script.sh'
+		run_script = f'{volume_script_dir}/run_script.sh'
 		run_args = args.script
 
 
