@@ -8,20 +8,27 @@ import string
 import tempfile
 import time
 from subprocess import run
-
-base_dir = '/home/jakelever/jakelevervol1claim/isub'
-template_filename = f'{base_dir}/template.yml'
+import inspect
+import isub
 
 def main():
-	parser = argparse.ArgumentParser()
+	gpu_options = ['none','titan','2080ti','a6000','3090']
+
+	parser = argparse.ArgumentParser("Tool for running jobs on OpenShift cluster",
+									formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument('script',nargs='+',type=str,help='Script to run')
 	parser.add_argument('--command',action='store_true',help='Run the arguments as a command and not a script')
 	parser.add_argument('--print',action='store_true',help='Print out the job file to stdout (useful for debug)')
 	parser.add_argument('--name',required=False,type=str,help='Name to give the job')
 	parser.add_argument('--cpu',required=False,type=int,default=2,help='How many CPUs to request')
 	parser.add_argument('--mem',required=False,type=int,default=8,help='How much memory to request (in GiB)')
-	parser.add_argument('--gpu',required=False,type=str,default='3090',help='Which GPU to request')
+	parser.add_argument('--gpu',required=False,type=str,default='3090',help=f'Which GPU to request (options are {", ".join(gpu_options)}.')
 	args = parser.parse_args()
+	
+	base_dir = os.path.dirname(inspect.getfile(isub))
+	template_filename = f'{base_dir}/template.yml'
+	
+	assert os.path.isfile(template_filename), "Unable to find the template file"
 
 	if args.command:
 		run_script = f'{base_dir}/run_command.sh'
@@ -34,7 +41,7 @@ def main():
 		run_args = args.script[0]
 
 
-	assert args.gpu in ['none','titan','2080ti','a6000','3090']
+	assert args.gpu in 
 
 	cpu_text = f"{args.cpu}000m"
 	mem_text = f"{args.mem}Gi"
