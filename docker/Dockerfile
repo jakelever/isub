@@ -15,3 +15,5 @@ RUN python3 -m pip install ray
 
 RUN python3 -m pip install networkx scispacy https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_sm-0.5.1.tar.gz
 
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
