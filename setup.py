@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION='0.0.1'
+VERSION='0.0.6'
 
 setup(name='isub',
 	version=VERSION,
