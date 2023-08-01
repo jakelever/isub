@@ -102,8 +102,9 @@ spec:
       #  "node-role.ida/gputitan" (Titan RTX)
       #  "node-role.ida/gpu3090" (RTX 3090)
       #  "node-role.ida/gpua6000" (RTX A6000)
-      nodeSelector:
-        <GPU_TYPE>
+      affinity:
+        nodeAffinity:
+          <GPU_TYPE>
       # determines what Kubernetes will do if the container inside the 
       # pod fails to start or crashes. This just tells it to give up
       # without retrying.

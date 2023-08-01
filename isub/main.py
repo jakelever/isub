@@ -36,7 +36,7 @@ def putScriptsOnVolume(base_dir, volume_script_dir):
 
 def main():
 	default_image = 'jakelever/ml_gpu:latest'
-	gpu_options = ['none','titan','2080ti','a6000','3090']
+	gpu_options = ['none','titan','2080ti','3090','a6000']
 
 	parser = argparse.ArgumentParser("Tool for running jobs on OpenShift cluster",
 									formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -50,7 +50,7 @@ def main():
 	parser.add_argument('--image',required=False,type=str,default=default_image,help='Docker image to use')
 	parser.add_argument('--cpu',required=False,type=int,default=2,help='How many CPUs to request')
 	parser.add_argument('--mem',required=False,type=int,default=8,help='How much memory to request (in GiB)')
-	parser.add_argument('--gpu',required=False,type=str,default='3090',help=f'Which GPU to request (options are {", ".join(gpu_options)}.')
+	parser.add_argument('--gpu',required=False,type=str,default='titan,2080ti,3090',help=f'Which GPU to request (options are {", ".join(gpu_options)}.')
 	args = parser.parse_args()
 
 	assert args.script or args.command, "Must provide --script with a Bash script or --command with a shell command"
@@ -92,17 +92,27 @@ def main():
 		run_args = args.script
 
 
-	assert args.gpu in gpu_options
-
 	cpu_text = f"{args.cpu}000m"
 	mem_text = f"{args.mem}Gi"
 
-	if args.gpu == 'none':
+	requested_gpus = sorted(set(args.gpu.split(',')))
+	for gpu in requested_gpus:
+		assert gpu in gpu_options, f"gpu='{gpu}' not in {gpu_options}"
+
+	if 'none' in requested_gpus:
+		assert requested_gpus==['none'], f"Cannot request GPUs with 'none' as well (args.gpu='{args.gpu}')"
 		gpu_count = ''
 		gpu_type = ''
 	else:
 		gpu_count = 'nvidia.com/gpu: 1'
-		gpu_type = f'node-role.ida/gpu{args.gpu}: "true"'
+		#gpu_type = f'node-role.ida/gpu{args.gpu}: "true"'
+		match_expressions = []
+		for gpu in requested_gpus:
+			match_expression = f"{{ 'matchExpressions': [ {{ 'key':'node-role.ida/gpu{gpu}' , 'operator':'In', 'values': ['true']  }} ] }} "
+			match_expressions.append(match_expression)
+
+		node_selector_terms = f"[ {' , '.join(match_expressions)}  ]"
+		gpu_type = f"requiredDuringSchedulingIgnoredDuringExecution: {{ 'nodeSelectorTerms': {node_selector_terms} }}"
 
 	now = datetime.now()
 	job_date = now.strftime("%Y-%m-%d-%H-%M-%S")
@@ -130,8 +140,6 @@ def main():
 	logdir = os.path.dirname(logfile)
 	assertWritePermissions(logdir)
 
-	print(f"Saving output of stdout/stderr to {logfile}")
-
 	with open(template_filename) as f:
 		template = f.read()
 
@@ -151,6 +159,7 @@ def main():
 		print(template)
 
 	if not args.nosubmit:
+		print(f"Saving output of stdout/stderr to {logfile}")
 		with tempfile.NamedTemporaryFile() as tf:
 			with open(tf.name,'w') as f:
 				f.write(template)
