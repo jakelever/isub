@@ -36,7 +36,7 @@ def putScriptsOnVolume(base_dir, volume_script_dir):
 
 def main():
 	default_image = 'jakelever/ml_gpu:latest'
-	gpu_options = ['none','titan','2080ti','3090','a6000']
+	gpu_options = ['titan','2080ti','3090','a6000']
 
 	parser = argparse.ArgumentParser("Tool for running jobs on OpenShift cluster",
 									formatter_class=argparse.ArgumentDefaultsHelpFormatter)
