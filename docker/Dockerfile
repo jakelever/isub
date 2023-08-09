@@ -11,8 +11,10 @@ RUN pip install scikit-learn pandas requests
 
 RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 
-RUN pip install transformers tokenizers accelerate datasets bitsandbytes sacremoses
+RUN pip install transformers tokenizers accelerate datasets sacremoses
 RUN pip install ray
 
-RUN pip install networkx scispacy https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_sm-0.5.1.tar.gz
+# Compile bits-and-bytes
+RUN git clone https://github.com/TimDettmers/bitsandbytes.git && cd bitsandbytes && CUDA_VERSION=113 make cuda11x && python setup.py install
 
+RUN pip install networkx scispacy https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_sm-0.5.1.tar.gz matplotlib
