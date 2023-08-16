@@ -26,17 +26,7 @@ spec:
         # CLI/web interface
       - name: isub-container  
         # specify the image this container will be created from. 
-        # in this example, we'll use the official NVIDIA Tensorflow images
-        # from DockerHub (https://hub.docker.com/r/tensorflow/tensorflow)
-        # these are handy because they come with Python included and optional
-        # GPU support, controlled by tags. The tag "2.0.0-gpu-py3" used here
-        # means we're getting:
-        # - Tensorflow 2.0.0
-        # - GPU support (CUDA libraries etc)
-        # - Python 3
-        #image: tensorflow/tensorflow:2.0.0-gpu-py3
-        image: jakelever/ml_gpu:latest
-        # the container will run the secondjob.py script from your external filespace 
+        image: <IMAGE>
         command: 
           - "bash"
           - "<RUN_SCRIPT>"

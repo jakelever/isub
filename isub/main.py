@@ -144,6 +144,7 @@ def main():
 		template = f.read()
 
 	template = template.replace('<USERNAME>',username)
+	template = template.replace('<IMAGE>',args.image)
 	template = template.replace('<JOB_NAME>',job_name)
 	template = template.replace('<JOB_ID>',job_id)
 	template = template.replace('<WORKING_DIR>',current_working_directory)
