@@ -2,9 +2,11 @@
 
 This is a basic system for submitting jobs to the IDA OpenShift GPU cluster. It sets up a job on the cluster using a Docker image and connects to the file system so that your files are accessible.
 
+**isub should be used on the head-node of the GPU cluster.** You can SSH into the machine using tools such as [PuTTY on Windows](https://www.putty.org/) or the [SSH client in the terminal on Mac](https://www.servermania.com/kb/articles/ssh-mac).
+
 ## Installation
 
-Install using pip3 directly from this GitHub repo
+You must log into the head node to run isub commands using SSH. You can install it using pip3 directly from this GitHub repo
 
 ```
 pip3 install -U --user git+https://github.com/jakelever/isub.git
@@ -12,6 +14,7 @@ pip3 install -U --user git+https://github.com/jakelever/isub.git
 
 ## Important details
 
+- You cannot and **should not run Python directly on the head-node** of the cluster. Instead you should run isub commands that launch a job on the cluster which is then run on one of the nodes with a GPU
 - You can only run code inside your volume directory (something like /home/jakelever/jakelevervol1claim).
 - The directories which you write to must be write accessible to all. Use `chmod a+w <DIRECTORY>` with the directory you want to make write accessible to all
 
